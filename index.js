@@ -1,10 +1,13 @@
 import express from 'express';
 import Hello from './Hello.js';
 import Lab5 from './Lab5/index.js';
-import cors from "cors";    
-import db from './Database/index.js';
-import UserRoutes from './Users/routes.js';
-import CourseRoutes from '../kambaz-next-js/app/(kambaz)/Courses/routes.js';  
+import cors from "cors";   
+import session from "express-session"; // Import session
+import "dotenv/config.js"; 
+import db from './Kambaz/Database/index.js';
+import UserRoutes from './Kambaz/Users/routes.js';
+import CourseRoutes from './Kambaz/Courses/routes.js';
+import ModuleRoutes from './Kambaz/Modules/routes.js';
 import AssignmentsRoutes from "./Kambaz/Assignments/routes.js";
 
 const app = express();
