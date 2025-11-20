@@ -27,10 +27,21 @@ export default function UsersDao(db) {
     db.users.find((user) => user.username === username);
   // -------------------------
 
-  const findUserByCredentials = (username, password) =>
-    db.users.find(
-      (user) => user.username === username && user.password === password
-    );
+  // const findUserByCredentials = (username, password) =>
+  //   db.users.find(
+  //     (user) => user.username === username && user.password === password
+  //   );
+
+  const findUserByCredentials = (username, password) => {
+  // CRITICAL FIX: Trim whitespace from input to ensure exact match
+  const trimmedUsername = username ? username.trim() : username;
+  const trimmedPassword = password ? password.trim() : password;
+  
+  return db.users.find(
+    // Ensure the lookup logic uses the trimmed strings
+    (user) => user.username === trimmedUsername && user.password === trimmedPassword
+  );
+};
 
   const updateUser = (userId, userUpdates) => {
     db.users = db.users.map((u) =>
