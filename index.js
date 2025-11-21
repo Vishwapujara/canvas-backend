@@ -202,7 +202,7 @@ const sessionOptions = {
 };
 
 // FIX: Check NODE_ENV (not SERVER_ENV) and configure cookies properly
-if (process.env.NODE_ENV === "production") {
+if (process.env.SERVER_ENV === "production") {
   sessionOptions.proxy = true;
   sessionOptions.cookie = {
     sameSite: "none",
