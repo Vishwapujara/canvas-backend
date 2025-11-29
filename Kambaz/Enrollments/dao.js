@@ -1,54 +1,46 @@
-import { v4 as uuidv4 } from "uuid";
+import model from "./model.js";
 
 export default function EnrollmentsDao(db) {
-  const findCoursesForUser = (userId) => {
-    // This function is in CoursesDao in the book, but logically fits here too.
-    // We'll find the course IDs from enrollments.
-    const enrollments = db.enrollments.filter((e) => e.user === userId);
-    const courseIds = enrollments.map((e) => e.course);
-    const courses = db.courses.filter((c) => courseIds.includes(c._id));
-    return courses;
-  };
+  
+  // REFACTORED: Finds enrollments for a user and populates the 'course' field
+  async function findCoursesForUser(userId) {
+    const enrollments = await model.find({ user: userId }).populate("course");
+    // Returns an array of actual Course documents
+    return enrollments.map((enrollment) => enrollment.course);
+  }
 
-  const findUsersForCourse = (courseId) => {
-    const enrollments = db.enrollments.filter((e) => e.course === courseId);
-    const userIds = enrollments.map((e) => e.user);
-    const users = db.users.filter((u) => userIds.includes(u._id));
-    return users;
-  };
+  // REFACTORED: Finds enrollments for a course and populates the 'user' field
+  async function findUsersForCourse(courseId) {
+    const enrollments = await model.find({ course: courseId }).populate("user");
+    // Returns an array of actual User documents
+    return enrollments.map((enrollment) => enrollment.user);
+  }
 
-  const enrollUserInCourse = (userId, courseId) => {
-    // Check if enrollment already exists
-    const existingEnrollment = db.enrollments.find(
-      (e) => e.user === userId && e.course === courseId
-    );
-    if (existingEnrollment) {
-      return existingEnrollment; // Already enrolled
-    }
-    // Create new enrollment
-    const newEnrollment = {
-      _id: uuidv4(),
+  // REFACTORED: Creates a new enrollment document
+  function enrollUserInCourse(userId, courseId) {
+    return model.create({
       user: userId,
       course: courseId,
-    };
-    db.enrollments.push(newEnrollment);
-    return newEnrollment;
-  };
+      // Create a predictable _id to prevent duplicate entries
+      _id: `${userId}-${courseId}`, 
+    });
+  }
+  
+  // REFACTORED: Deletes a single enrollment
+  function unenrollUserFromCourse(user, course) {
+    return model.deleteOne({ user, course });
+  }
 
-  const unenrollUserFromCourse = (userId, courseId) => {
-    // Filter out the enrollment
-    const initialLength = db.enrollments.length;
-    db.enrollments = db.enrollments.filter(
-      (e) => e.user !== userId || e.course !== courseId
-    );
-    // Return status (1 if deleted, 0 if not found)
-    return initialLength > db.enrollments.length ? 1 : 0;
-  };
+  // NEW: Deletes all enrollments for a given course
+  function unenrollAllUsersFromCourse(courseId) {
+    return model.deleteMany({ course: courseId });
+  }
 
   return {
     findCoursesForUser,
     findUsersForCourse,
     enrollUserInCourse,
     unenrollUserFromCourse,
+    unenrollAllUsersFromCourse,
   };
 }

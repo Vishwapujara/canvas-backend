@@ -1,27 +1,64 @@
+import { v4 as uuidv4 } from "uuid";
+// NOTE: Must now import CourseModel instead of ModuleModel
+import model from "../Courses/model.js"; 
+
 export default function ModulesDao(db) {
- function findModulesForCourse(courseId) {
-   const { modules } = db;
-   return modules.filter((module) => module.course === courseId);
- }
- return {
-   findModulesForCourse,
- };
-}
+  
+  // REFACTORED: Retrieve modules array from parent course document
+  async function findModulesForCourse(courseId) {
+    const course = await model.findById(courseId); // Find the course
+    // Return the subdocument array
+    return course.modules;
+  }
 
-function createModule(module) {
-  const newModule = { ...module, _id: uuidv4() };
-  db.modules = [...db.modules, newModule];
-  return newModule;
-}
+  // REFACTORED: Use $push to insert new module subdocument
+  async function createModule(courseId, module) {
+    const newModule = { 
+        ...module, 
+        _id: uuidv4(), // Generate client-side ID for subdocument
+        lessons: [] // Ensure lessons array exists
+    }; 
+    
+    const status = await model.updateOne(
+      { _id: courseId },
+      { $push: { modules: newModule } } // Push to the modules array
+    );
+    // Returning the newly created module (with its generated _id)
+    return newModule;
+  }
 
-function deleteModule(moduleId) {
-  const { modules } = db;
-  db.modules = modules.filter((module) => module._id !== moduleId);
-}
+  // REFACTORED: Use $pull to remove module subdocument
+  async function deleteModule(courseId, moduleId) {
+    const status = await model.updateOne(
+      { _id: courseId },
+      { $pull: { modules: { _id: moduleId } } } // Pull the subdocument by its _id
+    );
+    return status;
+  }
 
-function updateModule(moduleId, moduleUpdates) {
-  const { modules } = db;
-  const module = modules.find((module) => module._id === moduleId);
-  Object.assign(module, moduleUpdates);
-  return module;
+  // REFACTORED: Use findById and modules.id() to update subdocument
+  async function updateModule(courseId, moduleId, moduleUpdates) {
+    const course = await model.findById(courseId);
+    if (!course) {
+        throw new Error(`Course with ID ${courseId} not found.`);
+    }
+    // Find the subdocument within the modules array
+    const module = course.modules.id(moduleId);
+    if (!module) {
+        throw new Error(`Module with ID ${moduleId} not found in course ${courseId}.`);
+    }
+    
+    // Use Object.assign to apply updates to the subdocument
+    Object.assign(module, moduleUpdates); 
+    await course.save(); // Save the parent document to persist subdocument changes
+    
+    return module;
+  }
+
+  return {
+    findModulesForCourse,
+    createModule,
+    deleteModule,
+    updateModule,
+  };
 }

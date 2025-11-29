@@ -1,33 +1,44 @@
-import { v4 as uuidv4 } from "uuid";
+import model from "./model.js";
+
 export default function CoursesDao(db) {
+  
   function findAllCourses() {
-    return db.courses;
+    // REFACTORED: Use Mongoose model.find() with projection
+    return model.find({}, { name: 1, description: 1 });
   }
-  function findCoursesForEnrolledUser(userId) {
-    const { courses, enrollments } = db;
+  
+  async function findCoursesForEnrolledUser(userId) {
+    // REFACTORED: Fetch courses from DB with projection, filter with in-memory enrollments
+    const courses = await model.find({}, { _id: 1, name: 1, description: 1 }); 
+    const { enrollments } = db; 
+    
     const enrolledCourses = courses.filter((course) =>
-      enrollments.some((enrollment) => enrollment.user === userId && enrollment.course === course._id));
+      enrollments.some(
+        (enrollment) =>
+          enrollment.user === userId && enrollment.course === course._id
+      )
+    );
     return enrolledCourses;
   }
+  
   function createCourse(course) {
-    const newCourse = { ...course, _id: uuidv4() };
-    db.courses = [...db.courses, newCourse];
-    return newCourse;
+    // REFACTORED: Use Mongoose model.create()
+    return model.create(course);
   }
 
-  function deleteCourse(courseId) {
-    const { courses, enrollments } = db;
-    db.courses = courses.filter((course) => course._id !== courseId);
-    db.enrollments = enrollments.filter(
-      (enrollment) => enrollment.course !== courseId
-    );
+  async function deleteCourse(courseId) {
+    // REFACTORED: Only deletes the course from the MongoDB collection.
+    // Cleanup of enrollments is now handled in the routes file.
+    return model.deleteOne({ _id: courseId });
   }
 
-  function updateCourse(courseId, courseUpdates) {
-    const { courses } = db;
-    const course = courses.find((course) => course._id === courseId);
-    Object.assign(course, courseUpdates);
-    return course;
+  async function updateCourse(courseId, courseUpdates) {
+    // REFACTORED: Update in MongoDB
+    await model.updateOne({ _id: courseId }, { $set: courseUpdates });
+    
+    // Fetch and return the updated course
+    const updatedCourse = await model.findById(courseId);
+    return updatedCourse;
   }
 
   return { findAllCourses, findCoursesForEnrolledUser, createCourse, deleteCourse, updateCourse };

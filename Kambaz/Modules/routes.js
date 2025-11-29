@@ -1,39 +1,48 @@
 import ModulesDao from "./dao.js";
 export default function ModulesRoutes(app, db) {
-    const dao = ModulesDao(db);
-    const findModulesForCourse = (req, res) => {
+    // Note: The DAO constructor will ignore 'db' and use the Mongoose model
+    const dao = ModulesDao(db); 
+    
+    // REFACTORED: findModulesForCourse
+    const findModulesForCourse = async (req, res) => {
         const { courseId } = req.params;
-        const modules = dao.findModulesForCourse(courseId);
+        const modules = await dao.findModulesForCourse(courseId); 
         res.json(modules);
     }
-    const createModuleForCourse = (req, res) => {
+    
+    // REFACTORED: createModuleForCourse
+    const createModuleForCourse = async (req, res) => {
         const { courseId } = req.params;
         const module = {
             ...req.body,
-            course: courseId,
         };
-        const newModule = dao.createModule(module);
+        // DAO now takes courseId and module body
+        const newModule = await dao.createModule(courseId, module); 
         res.send(newModule);
     }
-    const deleteModule = (req, res) => {
-        const { moduleId } = req.params;
-        const status = dao.deleteModule(moduleId);
+    
+    // REFACTORED: deleteModule - Path now includes :courseId, DAO call updated
+    const deleteModule = async (req, res) => {
+        const { courseId, moduleId } = req.params; // Extract both IDs
+        const status = await dao.deleteModule(courseId, moduleId); // Pass both IDs
         res.send(status);
     }
-    app.delete("/api/modules/:moduleId", deleteModule);
+    // Update mapping to include courseId
+    app.delete("/api/courses/:courseId/modules/:moduleId", deleteModule);
 
+    // REFACTORED: updateModule - Path now includes :courseId, DAO call updated
     const updateModule = async (req, res) => {
-        const { moduleId } = req.params;
+        const { courseId, moduleId } = req.params; // Extract both IDs
         const moduleUpdates = req.body;
-        const status = await dao.updateModule(moduleId, moduleUpdates);
-        res.send(status);
+        // DAO now takes courseId, moduleId, and updates
+        const updatedModule = await dao.updateModule(courseId, moduleId, moduleUpdates); 
+        res.send(updatedModule);
     }
-    app.put("/api/modules/:moduleId", updateModule);
+    // Update mapping to include courseId
+    app.put("/api/courses/:courseId/modules/:moduleId", updateModule);
 
 
+    // Existing routes (keep original name but ensure correct implementation)
     app.post("/api/courses/:courseId/modules", createModuleForCourse);
     app.get("/api/courses/:courseId/modules", findModulesForCourse);
 }
-
-
-
