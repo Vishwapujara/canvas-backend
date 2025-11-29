@@ -1,8 +1,14 @@
-import courses from "./courses.json" assert { type: "json" };
-import modules from "./modules.json" assert { type: "json" };
-import assignments from "./assignments.json" assert { type: "json" };
-import users from "./users.json" assert { type: "json" };
-import enrollments from "./enrollments.json" assert { type: "json" };
+// Kambaz/Database/index.js
+
+import { createRequire } from 'module'; // 1. Import the utility
+const require = createRequire(import.meta.url); // 2. Create the require function
+
+// 3. Use require() to load JSON files safely
+const courses = require("./courses.json");
+const modules = require("./modules.json");
+const assignments = require("./assignments.json");
+const users = require("./users.json");
+const enrollments = require("./enrollments.json");
 
 const db = { 
   courses: [...courses], 
