@@ -18,4 +18,5 @@ const db = {
   enrollments: [...enrollments] 
 };
 
-export default { courses, modules, assignments, users, enrollments };
+// Disable local JSON DB loading — rely on MongoDB / server DAOs instead
+export default {};
