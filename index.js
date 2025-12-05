@@ -27,7 +27,8 @@ const ALLOWED_ORIGINS = [
   process.env.CLIENT_URL, 
   'http://localhost:3000', 
   'https://kambaz-next-js-466h.vercel.app',
-  'https://canvas-clone-frontend.vercel.app' 
+  'https://canvas-clone-frontend.vercel.app' ,
+  'https://new-canvas-clone-frontend.vercel.app'
 ];
 
 const vercelPreviewRegex = /-vishwa-pujaras-projects\.vercel\.app$/;
