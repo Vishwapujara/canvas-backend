@@ -9,13 +9,15 @@ const modules = require("./modules.json");
 const assignments = require("./assignments.json");
 const users = require("./users.json");
 const enrollments = require("./enrollments.json");
+const quizzes = require("./quizzes.json");
 
 const db = { 
   courses: [...courses], 
   modules: [...modules], 
   assignments: [...assignments], 
   users: [...users], 
-  enrollments: [...enrollments] 
+  enrollments: [...enrollments],
+  quizzes: [...quizzes] 
 };
 
 // Disable local JSON DB loading — rely on MongoDB / server DAOs instead

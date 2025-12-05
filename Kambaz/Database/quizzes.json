@@ -1,0 +1,138 @@
+[
+  {
+    "_id": "Q-CS5001-101",
+    "course": "CS5001",
+    "title": "React Fundamentals Quiz",
+    "description": "A quick assessment on core React concepts like JSX and components. This quiz is published and ready for students.",
+    "quizType": "GRADED_QUIZ",
+    "assignmentGroup": "QUIZZES",
+    "points": 25,
+    "shuffleAnswers": true,
+    "timeLimit": 30,
+    "multipleAttempts": true,
+    "howManyAttempts": 2,
+    "accessCode": null,
+    "oneQuestionAtATime": false,
+    "webcamRequired": false,
+    "lockQuestionsAfterAnswering": false,
+    "isPublished": true,
+    "dueDate": "2025-09-20T23:59:00Z",
+    "availableDate": "2025-09-10T00:00:00Z",
+    "untilDate": "2025-09-20T23:59:00Z",
+    "questions": [
+      {
+        "_id": "Q-A-1",
+        "title": "JSX Requirement",
+        "questionText": "What must all React components return at their top level?",
+        "points": 10,
+        "questionType": "MULTIPLE_CHOICE",
+        "choices": [
+          "An array of elements",
+          "A single root element",
+          "Multiple sibling elements",
+          "A JavaScript object"
+        ],
+        "correctAnswer": "A single root element"
+      },
+      {
+        "_id": "Q-A-2",
+        "title": "Hooks Statement",
+        "questionText": "The 'useState' hook can only be called inside class components.",
+        "points": 5,
+        "questionType": "TRUE_FALSE",
+        "correctAnswer": "False"
+      },
+      {
+        "_id": "Q-A-3",
+        "title": "Component Definition",
+        "questionText": "A component defined as a JavaScript function is called a ___________ component.",
+        "points": 10,
+        "questionType": "FILL_IN_THE_BLANK",
+        "correctAnswers": [
+          "functional",
+          "function"
+        ]
+      }
+    ]
+  },
+  {
+    "_id": "Q-CS5020-201",
+    "course": "CS5020",
+    "title": "HTML and CSS Review",
+    "description": "A review of foundational web technologies.",
+    "quizType": "GRADED_QUIZ",
+    "assignmentGroup": "EXAMS",
+    "points": 20,
+    "shuffleAnswers": false,
+    "timeLimit": 20,
+    "multipleAttempts": false,
+    "howManyAttempts": 1,
+    "accessCode": "FRONTEND20",
+    "oneQuestionAtATime": true,
+    "webcamRequired": false,
+    "lockQuestionsAfterAnswering": true,
+    "isPublished": false,
+    "dueDate": "2025-10-05T23:59:00Z",
+    "availableDate": "2025-10-01T00:00:00Z",
+    "untilDate": "2025-10-05T23:59:00Z",
+    "questions": [
+      {
+        "_id": "Q-B-1",
+        "title": "CSS Selector",
+        "questionText": "Which CSS selector targets all elements with the class 'highlight'?",
+        "points": 10,
+        "questionType": "MULTIPLE_CHOICE",
+        "choices": [
+          "#highlight",
+          "highlight",
+          ".highlight",
+          "*highlight"
+        ],
+        "correctAnswer": ".highlight"
+      },
+      {
+        "_id": "Q-B-2",
+        "title": "Semantic HTML",
+        "questionText": "The `<section>` tag is a semantic HTML5 element.",
+        "points": 10,
+        "questionType": "TRUE_FALSE",
+        "correctAnswer": "True"
+      }
+    ]
+  },
+  {
+    "_id": "Q-CS5030-301",
+    "course": "CS5030",
+    "title": "Data Structures Feedback",
+    "description": "An ungraded survey to gauge understanding of Data Structures.",
+    "quizType": "UNGRADED_SURVEY",
+    "assignmentGroup": "PROJECT",
+    "points": 100,
+    "shuffleAnswers": false,
+    "timeLimit": 0,
+    "multipleAttempts": true,
+    "howManyAttempts": 99,
+    "accessCode": null,
+    "oneQuestionAtATime": true,
+    "webcamRequired": false,
+    "lockQuestionsAfterAnswering": false,
+    "isPublished": true,
+    "dueDate": "2025-11-01T23:59:00Z",
+    "availableDate": "2025-10-15T00:00:00Z",
+    "untilDate": null,
+    "questions": [
+      {
+        "_id": "Q-C-1",
+        "title": "Big O Notation",
+        "questionText": "What is the Big O notation for searching a hash map (on average)?",
+        "points": 100,
+        "questionType": "FILL_IN_THE_BLANK",
+        "correctAnswers": [
+          "O(1)",
+          "O(n)",
+          "1"
+        ]
+      }
+    ]
+  }
+]
