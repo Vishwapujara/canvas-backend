@@ -203,22 +203,6 @@ app.use(cors({
   }
 }));
 
-// === CRITICAL FIX: Handle OPTIONS preflight requests explicitly ===
-// For cross-origin requests, the browser sends an OPTIONS request first. 
-// This ensures that request is always handled by the CORS middleware (above) 
-// and doesn't get blocked by Express's routing.
-app.options('*', cors({
-    credentials: true, 
-    origin: (origin, callback) => {
-        // Reuse the same logic for origins, or just pass null, true 
-        // if the main `app.use(cors)` block is sufficient.
-        if (!origin || ALLOWED_ORIGINS.includes(origin) || origin.match(vercelPreviewRegex)) {
-            return callback(null, true);
-        }
-        return callback(new Error('Not allowed by CORS'), false);
-    }
-}));
-
 
 // =============================================================================
 // 2. SESSION Configuration (MUST BE AFTER CORS, BEFORE BODY PARSER)
