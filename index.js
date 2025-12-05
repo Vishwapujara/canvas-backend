@@ -157,7 +157,7 @@ import UserRoutes from './Kambaz/Users/routes.js';
 import CourseRoutes from './Kambaz/Courses/routes.js';
 import ModuleRoutes from './Kambaz/Modules/routes.js';
 import AssignmentsRoutes from "./Kambaz/Assignments/routes.js";
-// import QuizRoutes from './Kambaz/Quizzes/routes.js';
+import QuizRoutes from './Kambaz/Quizzes/routes.js';
 
 const app = express();
 const isDevelopment = process.env.NODE_ENV === "development";
@@ -272,7 +272,7 @@ UserRoutes(app, db);
 CourseRoutes(app, db);
 ModuleRoutes(app, db);
 AssignmentsRoutes(app, db);
-// QuizRoutes(app, db); // Ensure QuizzesRoutes is registered if it exists
+QuizRoutes(app, db); // Ensure QuizzesRoutes is registered if it exists
 Hello(app);
 Lab5(app);
 
