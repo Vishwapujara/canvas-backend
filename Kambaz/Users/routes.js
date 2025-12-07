@@ -88,23 +88,25 @@ export default function UserRoutes(app) {
         }
     };
     
-    const signin = async (req, res) => { // ASYNC
-        try {
-            const { username, password } = req.body;
-            const currentUser = await dao.findUserByCredentials(username, password); 
-            
-            if (currentUser) {
-                req.session["currentUser"] = currentUser;
-                res.json(currentUser);
-            } else {
-                // Returns 401 if credentials don't match
-                res.status(401).json({ message: "Invalid username or password. Try again later." });
-            }
-        } catch (error) {
-            console.error("Signin failed:", error);
-            res.status(500).json({ message: "An unexpected error occurred during signin." });
-        }
-    };
+    const signin = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    console.log("Signin attempt:", { username, password }); // DEBUG
+    
+    const currentUser = await dao.findUserByCredentials(username, password); 
+    console.log("User found:", currentUser); // DEBUG
+    
+    if (currentUser) {
+      req.session["currentUser"] = currentUser;
+      res.json(currentUser);
+    } else {
+      res.status(401).json({ message: "Invalid username or password. Try again later." });
+    }
+  } catch (error) {
+    console.error("Signin failed:", error);
+    res.status(500).json({ message: "An unexpected error occurred during signin." });
+  }
+};
     
     const signout = async (req, res) => { // ASYNC (for consistency)
         req.session.destroy();
@@ -148,15 +150,32 @@ export default function UserRoutes(app) {
     };
     
     // Route mappings
-    app.post("/api/users", createUser);
-    app.get("/api/users", findAllUsers);
-    app.get("/api/users/:userId", findUserById);
-    app.put("/api/users/:userId", updateUser);
-    app.delete("/api/users/:userId", deleteUser);
-    app.post("/api/users/signup", signup);
-    app.post("/api/users/signin", signin);
-    app.post("/api/users/signout", signout);
-    app.post("/api/users/profile", profile);
-    app.post("/api/users/:uid/courses/:cid", enrollUserInCourse);
-    app.delete("/api/users/:uid/courses/:cid", unenrollUserFromCourse);
+    // Route mappings
+app.post("/api/users", createUser);
+app.get("/api/users/test", async (req, res) => {  // ← MOVE THIS UP HERE!
+  try {
+    const allUsers = await dao.findAllUsers();
+    console.log("=== DATABASE TEST ===");
+    console.log("Number of users found:", allUsers ? allUsers.length : 0);
+    console.log("Users:", JSON.stringify(allUsers, null, 2));
+    console.log("===================");
+    res.json({
+      count: allUsers ? allUsers.length : 0,
+      users: allUsers
+    });
+  } catch (error) {
+    console.error("Database test error:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+app.get("/api/users", findAllUsers);
+app.get("/api/users/:userId", findUserById);  // ← Now this comes AFTER
+app.put("/api/users/:userId", updateUser);
+app.delete("/api/users/:userId", deleteUser);
+app.post("/api/users/signup", signup);
+app.post("/api/users/signin", signin);
+app.post("/api/users/signout", signout);
+app.post("/api/users/profile", profile);
+app.post("/api/users/:uid/courses/:cid", enrollUserInCourse);
+app.delete("/api/users/:uid/courses/:cid", unenrollUserFromCourse);
 }

@@ -30,12 +30,8 @@ export default function UsersDao(db) {
 
   // Refactored to use Mongoose: model.findOne({ criteria })
   const findUserByCredentials = (username, password) => {
-    // IMPORTANT: Retaining your critical client-side logic for trimming credentials 
-    const trimmedUsername = username ? username.trim() : username;
-    const trimmedPassword = password ? password.trim() : password;
-
-    return model.findOne({ username: trimmedUsername, password: trimmedPassword });
-  };
+  return model.findOne({ username, password });
+};
 
   // Refactored to use Mongoose: model.updateOne({ filter }, { update })
   const updateUser = (userId, userUpdates) =>
